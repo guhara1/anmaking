@@ -639,9 +639,15 @@ function homePage() {
     })
     .join("\n        ");
 
+  // 롱테일 앵커 + 색인 대상(core) 페이지로 연결
   const regionChips = [
-    ...regions.map((r) => [`/region/${r.slug}/`, `${r.name}`]),
-    ...subwaySystems[0].lines.slice(0, 9).map((l) => [`/subway/line/${l.slug}/`, `${l.name}`]),
+    ...REGION_ANCHORS.map(([u, name, suffix]) => [u, `${name} ${suffix}`]),
+    ["/subway/gangnam/", "강남역 출장마사지"],
+    ["/subway/jamsil/", "잠실역 홈타이 안내"],
+    ["/subway/hongdaeip/", "홍대입구역 출장마사지"],
+    ["/subway/suwon/", "수원역 방문 안내"],
+    ["/subway/bupyeong/", "부평역 출장마사지"],
+    ["/subway/busan-seo/", "서면역 홈타이"],
   ]
     .map(([u, t]) => `<a class="chip" href="${u}">${esc(t)}</a>`)
     .join("");
@@ -726,6 +732,26 @@ function homePage() {
 }
 
 // ---------- 정적 안내 페이지 ----------
+// 권위 있는 외부 자료 인용 (E-E-A-T: 외부 인용·언급 신뢰 신호)
+function referencesBlock() {
+  const refs = [
+    ["https://health.kdca.go.kr/", "국가건강정보포털 (질병관리청)"],
+    ["https://ko.wikipedia.org/wiki/마사지", "마사지 — 위키백과"],
+    ["https://www.mohw.go.kr/", "보건복지부"],
+    ["https://www.kca.go.kr/", "한국소비자원"],
+  ];
+  return `
+  <section class="section section-alt"><div class="container prose">
+    <h2>참고 자료</h2>
+    <p>관리 방식·위생·소비자 보호와 관련해 함께 살펴볼 수 있는 공신력 있는 외부 자료입니다. 본 사이트의 안내는 아래 기관의 일반 정보를 참고해 정리합니다.</p>
+    <ul>
+      ${refs
+        .map(([u, t]) => `<li><a href="${u}" target="_blank" rel="noopener">${esc(t)}</a></li>`)
+        .join("\n      ")}
+    </ul>
+  </div></section>`;
+}
+
 function simplePage({ path, eyebrow, h1, desc, sections, faqs, extras }) {
   const faqBlock = faqs
     ? `<h2>예약 전 자주 받는 질문</h2><div class="faq">${faqs
@@ -810,7 +836,7 @@ function outcallPage() {
       <h2>지역으로 찾아보기</h2>
       <p>지역마다 방문이 닿는 권역과 도착 소요 시간이 다릅니다. 아래에서 원하는 지역을 고른 뒤 더 좁은 동네·역세권까지 짚어 보면 안내가 한층 정확해집니다.</p>
       ${regionLinks()}`,
-    extras: `${reviewsSection()}\n  ${pricingTable()}`,
+    extras: `${reviewsSection()}\n  ${pricingTable()}\n  ${referencesBlock()}`,
     faqs: [
       {
         q: "출장마사지와 홈타이는 서로 다른가요?",
@@ -874,7 +900,7 @@ function guidePage() {
       <h2>프로그램과 지역 둘러보기</h2>
       <p>관리 방식부터 정하고 싶다면 <a href="/program/">마사지 프로그램</a>에서 견준 뒤, 아래 지역에서 원하는 곳을 골라 방문 가능 여부를 확인하세요.</p>
       ${regionLinks()}`,
-    extras: `${reviewsSection()}\n  ${pricingTable()}`,
+    extras: `${reviewsSection()}\n  ${pricingTable()}\n  ${referencesBlock()}`,
     faqs: [
       {
         q: "당일 예약도 되나요?",
@@ -950,6 +976,7 @@ function aboutPage() {
         a: "단정적인 추천 대신, 지역·프로그램·이용 방식별로 예약 전 짚어야 할 기준을 정리해 드립니다. 마지막 선택과 판단은 이용자의 몫입니다.",
       },
     ],
+    extras: referencesBlock(),
   });
 }
 
@@ -983,7 +1010,7 @@ function contactPage() {
       <h2>지역으로 빠르게 살펴보기</h2>
       <p>아래에서 원하는 지역을 고르면 그 지역의 출장마사지·홈타이 이용 안내와 더 좁은 동네·역세권 페이지로 넘어갈 수 있습니다.</p>
       ${regionLinks()}`,
-    extras: `${reviewsSection()}\n  ${pricingTable()}`,
+    extras: `${reviewsSection()}\n  ${pricingTable()}\n  ${referencesBlock()}`,
     faqs: [
       {
         q: "전화 말고 다른 예약 방법도 있나요?",
