@@ -284,6 +284,16 @@ function programPage(p) {
       path: programUrl(p.slug),
       modified: MODIFIED,
     }),
+    {
+      "@context": "https://schema.org",
+      "@type": "Service",
+      name: `${p.label} 출장마사지·홈타이`,
+      serviceType: p.label,
+      description: p.desc,
+      provider: { "@id": site.baseUrl + "/#org" },
+      areaServed: "KR",
+      url: site.baseUrl + programUrl(p.slug),
+    },
   ];
 
   const html = layout({
@@ -359,12 +369,26 @@ function programIndex() {
     <div class="callout">안내된 정보와 금액은 달라질 수 있습니다. <strong>실제 이용 가능 여부와 비용은 예약 전 ${esc(site.phone)}로 직접 확인</strong>하세요.</div>
   </div></section>`;
 
+  // 프로그램 목록을 ItemList(구조화 데이터)로 노출
+  const itemListLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "마사지 프로그램 목록",
+    itemListElement: programs.map((p, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: p.label,
+      url: site.baseUrl + programUrl(p.slug),
+    })),
+  };
+
   return layout({
     title: `마사지 종류별 프로그램 안내 모음 | ${site.name}`,
     description:
       "스웨디시·타이·아로마부터 홈타이·24시간까지, 관리 방식과 이용 조건을 한자리에서 비교해 드립니다.",
     path: "/program/",
     body,
+    structuredData: [itemListLd],
     breadcrumb: [
       { name: "홈", url: "/" },
       { name: "마사지 프로그램", url: "/program/" },

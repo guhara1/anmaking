@@ -210,18 +210,31 @@ export function layout(o) {
     ? `\n  <link rel="preload" as="image" href="/assets/hero.webp" type="image/webp" fetchpriority="high" />`
     : "";
 
-  // 조직(LocalBusiness) 기본 JSON-LD
+  // ---- 연결형 엔티티 그래프(@id 참조): Organization ↔ WebSite ↔ WebPage ----
+  const ORG_ID = site.baseUrl + "/#org";
+  const SITE_ID = site.baseUrl + "/#website";
+  const LOGO_ID = site.baseUrl + "/#logo";
+  const PAGE_ID = canonical + "#webpage";
+  const BC_ID = canonical + "#breadcrumb";
+
   const orgLd = {
-    "@context": "https://schema.org",
-    "@type": "HealthAndBeautyBusiness",
+    "@type": ["Organization", "HealthAndBeautyBusiness"],
+    "@id": ORG_ID,
     name: site.name,
+    alternateName: "안마킹",
     description: site.tagline,
     url: site.baseUrl,
     telephone: site.phone,
     email: site.email,
-    image: ogImage,
-    logo: abs("/assets/favicon.svg"),
+    image: { "@id": LOGO_ID },
+    logo: {
+      "@type": "ImageObject",
+      "@id": LOGO_ID,
+      url: abs("/assets/favicon.svg"),
+      caption: site.name,
+    },
     knowsLanguage: "ko",
+    knowsAbout: ["출장마사지", "홈타이", "스웨디시", "타이마사지", "아로마테라피", "발마사지"],
     priceRange: "₩90,000~₩180,000",
     areaServed: [
       "서울", "경기", "인천", "부산", "대구", "대전", "광주", "울산", "세종",
@@ -236,10 +249,20 @@ export function layout(o) {
     },
   };
 
+  const websiteLd = {
+    "@type": "WebSite",
+    "@id": SITE_ID,
+    url: site.baseUrl,
+    name: site.name,
+    description: site.tagline,
+    inLanguage: "ko",
+    publisher: { "@id": ORG_ID },
+  };
+
   const breadcrumbLd = o.breadcrumb
     ? {
-        "@context": "https://schema.org",
         "@type": "BreadcrumbList",
+        "@id": BC_ID,
         itemListElement: o.breadcrumb.map((b, i) => ({
           "@type": "ListItem",
           position: i + 1,
@@ -249,10 +272,29 @@ export function layout(o) {
       }
     : null;
 
-  const extra = (o.structuredData || [])
-    .concat(breadcrumbLd ? [breadcrumbLd] : [])
-    .map(jsonld)
-    .join("\n  ");
+  const webpageLd = {
+    "@type": "WebPage",
+    "@id": PAGE_ID,
+    url: canonical,
+    name: o.title,
+    description: desc,
+    isPartOf: { "@id": SITE_ID },
+    about: { "@id": ORG_ID },
+    inLanguage: "ko",
+    primaryImageOfPage: ogImage,
+    datePublished: "2026-01-10",
+    dateModified: "2026-06-21",
+    ...(breadcrumbLd ? { breadcrumb: { "@id": BC_ID } } : {}),
+  };
+
+  // 핵심 엔티티는 하나의 @graph 로 묶어 출력
+  const graphLd = {
+    "@context": "https://schema.org",
+    "@graph": [orgLd, websiteLd, webpageLd, ...(breadcrumbLd ? [breadcrumbLd] : [])],
+  };
+
+  // 페이지별 추가 스키마(Article·FAQPage·Service 등)는 별도 스크립트로 출력
+  const extra = (o.structuredData || []).map(jsonld).join("\n  ");
 
   return `<!DOCTYPE html>
 <html lang="ko">
@@ -274,6 +316,7 @@ export function layout(o) {
   <meta property="og:description" content="${esc(desc)}" />
   <meta property="og:url" content="${canonical}" />
   <meta property="og:image" content="${ogImage}" />
+  <meta property="og:image:alt" content="${esc(site.name)} ${esc(site.tagline)}" />
   <meta property="og:locale" content="${site.locale}" />
   <meta name="twitter:card" content="summary_large_image" />
 
@@ -285,7 +328,7 @@ export function layout(o) {
   <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" /></noscript>
   <link rel="stylesheet" href="/assets/styles.css" />
 
-  ${jsonld(orgLd)}
+  ${jsonld(graphLd)}
   ${extra}
 </head>
 <body>
