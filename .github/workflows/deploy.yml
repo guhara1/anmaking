@@ -30,10 +30,9 @@ jobs:
           BASE_PATH: /anmaking
           SITE_URL: https://guhara1.github.io/anmaking
       - name: Configure Pages
-        # enablement:true → 워크플로가 Pages 사이트를 자동 활성화(Source: GitHub Actions)
+        # ⚠️ 최초 1회 저장소 Settings → Pages → Source: "GitHub Actions" 로 활성화 필요
+        #    (워크플로 토큰은 Pages 사이트를 '생성'할 권한이 없음 — 수동 활성화 후 자동 배포)
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
