@@ -1079,7 +1079,7 @@ function sitemap(urls) {
   const body = urls
     .map(
       (u) =>
-        `  <url><loc>${site.baseUrl}${u}</loc><lastmod>${MODIFIED}</lastmod></url>`
+        `  <url><loc>${site.baseUrl}${u}</loc><lastmod>${MODIFIED}</lastmod><changefreq>weekly</changefreq><priority>${sitemapPriority(u)}</priority></url>`
     )
     .join("\n");
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>`;
@@ -1133,22 +1133,71 @@ ${items}
 </rss>`;
 }
 
+// ---------- 단계적 색인(도어웨이/대량생성 방지) ----------
+// 1차: 검색 수요가 큰 핵심 페이지(약 96개)만 index + 사이트맵 포함.
+// 나머지(행정동·비핵심 구·비핵심 역·노선)는 데이터로 보유하되 noindex 처리.
+const CORE_FIXED = new Set([
+  "/", "/program/", "/outcall/", "/guide/", "/about/", "/contact/", "/privacy/", "/terms/", "/region/", "/subway/",
+]);
+const CORE_SIGUNGU_PATHS = new Set([
+  "/region/seoul/gangnam/", "/region/seoul/songpa/", "/region/seoul/mapo/", "/region/seoul/yeongdeungpo/",
+  "/region/seoul/seocho/", "/region/seoul/gangseo/", "/region/seoul/guro/", "/region/seoul/geumcheon/",
+  "/region/seoul/gwanak/", "/region/seoul/dongjak/", "/region/seoul/gwangjin/", "/region/seoul/seongdong/",
+  "/region/gyeonggi/suwon/", "/region/gyeonggi/seongnam/", "/region/gyeonggi/goyang/", "/region/gyeonggi/yongin/",
+  "/region/gyeonggi/namyangju/", "/region/gyeonggi/gimpo/", "/region/gyeonggi/gwangmyeong/", "/region/gyeonggi/guri/",
+  "/region/gyeonggi/gunpo/", "/region/gyeonggi/bucheon/", "/region/gyeonggi/anyang/", "/region/gyeonggi/hanam/",
+  "/region/gyeonggi/hwaseong/", "/region/gyeonggi/pyeongtaek/",
+]);
+const CORE_STATION_PATHS = new Set([
+  "/subway/gangnam/", "/subway/jamsil/", "/subway/hongdaeip/", "/subway/geondaeip/", "/subway/sinrim/",
+  "/subway/yeouido/", "/subway/yeongdeungpo/", "/subway/sindorim/", "/subway/gasandijiteoldanji/", "/subway/suwon/",
+  "/subway/pangyo/", "/subway/jeongja/", "/subway/seohyeon/", "/subway/bupyeong/", "/subway/songdodalbitchukjegongwon/",
+  "/subway/busan-seo/", "/subway/busan-haeundae/", "/subway/busan-busan/", "/subway/daegu-banwoldang/",
+  "/subway/daejeon-jeongbucheongsa/", "/subway/gwangju-sangmu/",
+]);
+function isIndexable(path) {
+  if (CORE_FIXED.has(path)) return true;
+  if (/^\/program\/[^/]+\/$/.test(path)) return true;   // 프로그램 22
+  if (/^\/region\/[^/]+\/$/.test(path)) return true;     // 시·도 허브 17
+  if (CORE_SIGUNGU_PATHS.has(path)) return true;         // 1차 핵심 시군구
+  if (CORE_STATION_PATHS.has(path)) return true;         // 1차 핵심 지하철역
+  return false;
+}
+// 사이트맵 우선순위 힌트
+function sitemapPriority(path) {
+  if (path === "/") return "1.0";
+  if (CORE_FIXED.has(path) || /^\/region\/[^/]+\/$/.test(path)) return "0.8";
+  if (/^\/program\/[^/]+\/$/.test(path)) return "0.7";
+  return "0.6";
+}
+
 // ---------- 메인 ----------
 async function build() {
   if (existsSync(DIST)) await rm(DIST, { recursive: true, force: true });
   await mkdir(DIST, { recursive: true });
 
   const urls = [];
+  let noindexCount = 0;
   const metaTitles = new Map();
   const metaDescs = new Map();
   const add = async (path, file, html) => {
+    const core = isIndexable(path);
+    if (!core) {
+      // 1차 색인 대상이 아니면 noindex(색인 제외) — 사이트맵·RSS에서도 제외
+      html = html.replace(
+        /<meta name="robots" content="[^"]*"\s*\/>/,
+        '<meta name="robots" content="noindex, follow, max-image-preview:large" />'
+      );
+    }
     await write(file, html);
-    urls.push(path);
     const t = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "";
     const d = (html.match(/<meta name="description" content="([^"]*)"/) || [])[1] || "";
+    // 타이틀·디스크립션 고유성은 전체 페이지 기준으로 계속 검사
     metaTitles.set(t, (metaTitles.get(t) || 0) + 1);
     metaDescs.set(d, (metaDescs.get(d) || 0) + 1);
     pageMetaByPath[path] = { title: t, desc: d };
+    if (core) urls.push(path);
+    else noindexCount++;
   };
 
   console.log("→ 페이지 생성 중...");
@@ -1308,7 +1357,7 @@ ${programs.map((p) => `- [${p.label}](${u}/program/${p.slug}/)`).join("\n")}
     console.log(`✓ 타이틀·디스크립션 중복 없음 (${metaTitles.size}종 고유)`);
   }
 
-  console.log(`✓ 총 ${urls.length}개 페이지 생성 완료`);
+  console.log(`✓ 총 ${urls.length + noindexCount}개 페이지 생성 (색인 ${urls.length}개 + noindex ${noindexCount}개)`);
   console.log(`✓ 프로그램 페이지 최소 본문 길이: ${minLen}자`);
   console.log(`✓ sitemap.xml / robots.txt 생성 완료`);
 }

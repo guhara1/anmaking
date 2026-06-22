@@ -218,10 +218,22 @@ export function layout(o) {
     description: site.tagline,
     url: site.baseUrl,
     telephone: site.phone,
+    email: site.email,
     image: ogImage,
-    areaServed: "KR",
+    logo: abs("/assets/favicon.svg"),
     knowsLanguage: "ko",
     priceRange: "₩90,000~₩180,000",
+    areaServed: [
+      "서울", "경기", "인천", "부산", "대구", "대전", "광주", "울산", "세종",
+      "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
+    ].map((n) => ({ "@type": "AdministrativeArea", name: n })),
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: site.phone,
+      contactType: "reservations",
+      areaServed: "KR",
+      availableLanguage: ["ko"],
+    },
   };
 
   const breadcrumbLd = o.breadcrumb
@@ -329,30 +341,31 @@ export const REVIEWS = [
   { name: "한○○", meta: "서울 마포 · 홈타이", rating: 4, text: "홈타이 처음인데 준비물 안내가 자세해서 편하게 받았습니다." },
 ];
 
+// 신뢰 기준 섹션 — 검증되지 않은 후기·평점은 게재하지 않는다(E-E-A-T).
 export function reviewsSection() {
-  const cards = REVIEWS.map(
-    (r) => `
+  const items = [
+    ["예약 전 직접 확인", "가격·운영 정보는 변동될 수 있어, 방문 가능 여부와 총비용을 예약 시 직접 확인하도록 안내합니다."],
+    ["확인 기준 중심 안내", "과장된 추천 대신 프로그램 구성·이용 시간·추가 비용 등 예약 전 점검 기준을 정리합니다."],
+    ["편집·검수 운영", "이용자 문의를 반영해 지역·프로그램 안내 내용을 주기적으로 업데이트합니다."],
+  ];
+  const cards = items
+    .map(
+      ([h, p]) => `
       <div class="review-card">
-        <div class="stars" aria-label="별점 ${r.rating}점">${"★".repeat(r.rating)}<span class="off">${"★".repeat(5 - r.rating)}</span></div>
-        <p class="review-text">“${esc(r.text)}”</p>
-        <p class="review-meta"><strong>${esc(r.name)}</strong> · ${esc(r.meta)}</p>
+        <p class="review-text">${esc(p)}</p>
+        <p class="review-meta"><strong>${esc(h)}</strong></p>
       </div>`
-  ).join("");
+    )
+    .join("");
   return `
-  <section class="reviews" aria-label="고객 후기">
+  <section class="reviews" aria-label="안내 신뢰 기준">
     <div class="container">
       <div class="reviews-head">
-        <span class="eyebrow">이용 후기</span>
-        <h2>직접 받아 보신 분들의 이용 후기</h2>
-        <div class="rating-badge">
-          <span class="g">G</span>
-          <span class="score">4.8</span>
-          <span class="stars">★★★★★</span>
-          <span class="count">/ 5.0 · 후기 1,300+</span>
-        </div>
+        <span class="eyebrow">신뢰 기준</span>
+        <h2>${esc(site.name)}이 지키는 안내 원칙</h2>
       </div>
       <div class="grid grid-3">${cards}</div>
-      <p class="reviews-note">후기는 이용 고객이 남긴 내용을 바탕으로 정리한 예시이며, 실제 경험과 만족도는 개인·업체에 따라 다를 수 있습니다.</p>
+      <p class="reviews-note">검증 가능한 실제 후기만 게재하며, 확인되지 않은 후기·평점은 표시하지 않습니다.</p>
     </div>
   </section>`;
 }
