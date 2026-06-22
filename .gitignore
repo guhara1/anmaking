@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+__pycache__/
+*.pyc
+
+# 빌드 산출물 (배포 시 CI가 생성)
+dist/
