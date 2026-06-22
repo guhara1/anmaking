@@ -374,7 +374,7 @@ export function layout(o) {
   <link rel="canonical" href="${canonical}" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta name="author" content="${esc(site.author.name)}" />
-  <meta name="naver-site-verification" content="9b39a31c456589d9d1c09d989cf20271a2fd648e" />
+  <meta name="naver-site-verification" content="009881bd5e9da3019c7417a4dab188a0c89b196a" />
   <link rel="alternate" type="application/rss+xml" title="${esc(site.name)} RSS" href="${site.baseUrl}/rss.xml" />
 
   <!-- Open Graph / 선호 썸네일 지정 -->

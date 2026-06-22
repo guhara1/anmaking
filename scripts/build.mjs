@@ -1366,6 +1366,9 @@ Sitemap: ${site.baseUrl}/sitemap.xml
   );
   await writeFile(join(DIST, "sitemap.xml"), sitemap(urls), "utf8");
 
+  // 커스텀 도메인(GitHub Pages) — 배포 산출물 루트에 CNAME 게시
+  await writeFile(join(DIST, "CNAME"), new URL(site.baseUrl).host, "utf8");
+
   // RSS 2.0 피드 (네이버·구글·피드리더 색인/발견용)
   await writeFile(join(DIST, "rss.xml"), rssFeed(urls), "utf8");
 

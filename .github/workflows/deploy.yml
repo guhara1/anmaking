@@ -26,9 +26,8 @@ jobs:
       - name: Build static site
         run: node scripts/build.mjs
         env:
-          # 프로젝트 Pages는 https://<user>.github.io/<repo>/ 하위 경로로 서빙됨
-          BASE_PATH: /anmaking
-          SITE_URL: https://guhara1.github.io/anmaking
+          # 커스텀 루트 도메인(anmaking.com)으로 서빙 — 하위경로(BASE_PATH) 없음
+          SITE_URL: https://anmaking.com
       - name: Configure Pages
         # ⚠️ 최초 1회 저장소 Settings → Pages → Source: "GitHub Actions" 로 활성화 필요
         #    (워크플로 토큰은 Pages 사이트를 '생성'할 권한이 없음 — 수동 활성화 후 자동 배포)
