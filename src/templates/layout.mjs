@@ -207,7 +207,7 @@ export function layout(o) {
   // LCP 조기 발견 + 높은 우선순위 확보를 위해 히어로가 있는 페이지에만 preload 주입.
   const hasHero = /class="hero"/.test(o.body || "");
   const heroPreload = hasHero
-    ? `\n  <link rel="preload" as="image" href="/assets/hero.svg" type="image/svg+xml" fetchpriority="high" />`
+    ? `\n  <link rel="preload" as="image" href="/assets/hero.webp" type="image/webp" fetchpriority="high" />`
     : "";
 
   // 조직(LocalBusiness) 기본 JSON-LD
