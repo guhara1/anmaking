@@ -31,6 +31,13 @@ export const site = {
   },
   // 결제 수단 — 실제 가능한 수단으로 수정하세요
   payments: ["현금", "계좌이체", "신용카드"],
+  // 검색엔진 사이트 소유확인 메타 (없으면 비워 둠 → 메타 미출력)
+  verification: {
+    naver: "009881bd5e9da3019c7417a4dab188a0c89b196a",
+    google: "", // 구글 서치콘솔 'HTML 태그' content 값을 넣으면 자동 노출
+  },
+  // IndexNow 키 (빙·네이버·얀덱스 즉시 색인 통보). dist/<키>.txt 로 게시됨.
+  indexNowKey: "a8fca1ff1ef9e89a09341162c81b55a2",
 };
 
 // 상단 메뉴 (홈타이 단독 메뉴 없음)

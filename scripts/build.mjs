@@ -1137,7 +1137,7 @@ function sitemap(urls) {
 }
 
 // IndexNow 키 (빙·네이버·얀덱스 즉시 색인 통보). 키 파일은 도메인 루트에 동일 내용으로 게시됨.
-const INDEXNOW_KEY = "b00508e375ed8ff4e993dc41ca0b8c4a";
+const INDEXNOW_KEY = site.indexNowKey;
 
 // 경로별 메타(타이틀·디스크립션) — RSS 생성에 사용
 const pageMetaByPath = {};

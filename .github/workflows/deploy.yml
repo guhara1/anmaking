@@ -47,3 +47,22 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  # 배포 후 IndexNow 즉시 색인 통보 (빙·네이버·얀덱스). 구글은 IndexNow 미참여.
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build (sitemap 재생성)
+        run: node scripts/build.mjs
+        env:
+          SITE_URL: https://anmaking.com
+      - name: IndexNow 일괄 통보
+        run: python3 tools/indexnow.py
+        env:
+          HOST: anmaking.com
+        continue-on-error: true
