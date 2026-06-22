@@ -451,7 +451,7 @@ function placePage(r, baseUrl) {
       site.phone
     )}로 확인</strong>하세요.</div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>예약 전 자주 받는 질문</h2>
     <div class="faq">
       ${faqs
         .map(
@@ -704,7 +704,7 @@ function homePage() {
 // ---------- 정적 안내 페이지 ----------
 function simplePage({ path, eyebrow, h1, desc, sections, faqs, extras }) {
   const faqBlock = faqs
-    ? `<h2>자주 묻는 질문</h2><div class="faq">${faqs
+    ? `<h2>예약 전 자주 받는 질문</h2><div class="faq">${faqs
         .map(
           (f) => `<details><summary>${esc(f.q)}</summary><p>${esc(
             f.a

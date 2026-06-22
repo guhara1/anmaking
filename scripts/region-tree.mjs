@@ -79,11 +79,19 @@ function callout() {
 }
 const ctaBtn = (label) =>
   `<p><a class="btn btn-primary" href="${site.phoneHref}">📞 ${esc(label)} 전화예약 ${esc(phone)}</a></p>`;
+// 롱테일 앵커 변형 (지역+프로그램 문맥, 페이지마다 다르게)
+const CHIP_FORMS = [
+  (pre, lb) => `${pre}${lb} 출장마사지`,
+  (pre, lb) => `${pre}${lb} 홈타이 안내`,
+  (pre, lb) => `${pre}방문 ${lb} 코스`,
+  (pre, lb) => `${pre}${lb} 케어 받기`,
+];
 function programChips(place) {
   const pre = place ? `${place} ` : "";
   return `<div class="link-cloud">${PROGRAM_PICKS.map((slug) => {
-    const p = programBySlug[slug];
-    return `<a href="/program/${slug}/">${esc(pre + p.label)}</a>`;
+    const lb = programBySlug[slug].label;
+    const form = vpick(place || "전국", "chip-" + slug, CHIP_FORMS);
+    return `<a href="/program/${slug}/">${esc(form(pre, lb))}</a>`;
   }).join("")}</div>`;
 }
 const stationsText = (n) => (n.stations && n.stations.length ? n.stations.slice(0, 4).join("·") : "");
@@ -282,7 +290,7 @@ function dongPage(node) {
       <a href="${node.ancestors[0].url}">${esc(metro)} 전체</a>
     </div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>예약 전 자주 받는 질문</h2>
     <div class="faq">
       ${faqs
         .map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`)
@@ -464,7 +472,7 @@ function branchPage(node) {
     ], 5).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>`;
 
   const secFaq = `
-    <h2>자주 묻는 질문</h2>
+    <h2>예약 전 자주 받는 질문</h2>
     <div class="faq">
       ${faqs
         .map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`)

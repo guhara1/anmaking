@@ -31,9 +31,20 @@ function callout() {
   return `<div class="callout">안내된 내용과 요금은 상황에 따라 바뀔 수 있으니, <strong>실제 방문 진행 여부와 금액은 예약 전에 ${esc(phone)}로 직접 문의</strong>해 두는 편이 확실합니다.</div>`;
 }
 const ctaBtn = (label) => `<p><a class="btn btn-primary" href="${site.phoneHref}">📞 ${esc(label)} 전화예약 ${esc(phone)}</a></p>`;
+// 롱테일 앵커 변형 (역세권+프로그램 문맥, 페이지마다 다르게)
+const CHIP_FORMS = [
+  (pre, lb) => `${pre}${lb} 출장마사지`,
+  (pre, lb) => `${pre}${lb} 홈타이 안내`,
+  (pre, lb) => `${pre}방문 ${lb} 코스`,
+  (pre, lb) => `${pre}${lb} 케어 받기`,
+];
 function programChips(place) {
   const pre = place ? `${place} ` : "";
-  return `<div class="link-cloud">${PROGRAM_PICKS.map((slug) => `<a href="/program/${slug}/">${esc(pre + programBySlug[slug].label)}</a>`).join("")}</div>`;
+  return `<div class="link-cloud">${PROGRAM_PICKS.map((slug) => {
+    const lb = programBySlug[slug].label;
+    const form = vpick(place || "전국", "chip-" + slug, CHIP_FORMS);
+    return `<a href="/program/${slug}/">${esc(form(pre, lb))}</a>`;
+  }).join("")}</div>`;
 }
 const crumb = (parts) => parts.map(([name, url]) => ({ name, url: url || "" }));
 
@@ -212,7 +223,7 @@ function stationPage(reg, sys) {
     <p>${esc(station)}이(가) 지나는 ${esc(lineText)}과(와) ${esc(neighText)} 같은 옆 역을 함께 살펴보면 오가는 경로에 맞는 안내를 받기 좋습니다.</p>
     <div class="link-cloud">${lineLinks}${neighLinks}</div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>예약 전 자주 받는 질문</h2>
     <div class="faq">
       ${faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n      ")}
     </div>
@@ -339,7 +350,7 @@ function linePage(line, sys) {
       <a href="/program/swedish/">스웨디시</a><a href="/program/aroma-therapy/">아로마테라피</a><a href="/program/home-care/">홈타이</a><a href="/guide/">예약 가이드</a>
     </div>
 
-    <h2>자주 묻는 질문</h2>
+    <h2>예약 전 자주 받는 질문</h2>
     <div class="faq">
       ${faqs.map((f) => `<details><summary>${esc(f.q)}</summary><p>${esc(f.a)}</p></details>`).join("\n      ")}
     </div>
@@ -392,7 +403,7 @@ function subwayIndex(systems, stationCount, lineCount) {
     <p>전국 지하철은 노선마다 지나는 지역과 분위기가 제각각입니다. 노선을 먼저 고른 다음 가까운 역을 누르면, 그 역세권을 기준으로 출장마사지·홈타이 방문 범위와 예약 안내를 확인할 수 있습니다. 같은 역이라도 출발 지점에 따라 걸리는 시간이 달라지니, 원하는 역과 시간대를 정해 두면 안내가 빨라집니다.</p>
     <p>관리 방식은 오일로 풀어 주는 관리(스웨디시·아로마테라피), 늘려 주는 타이마사지, 집·숙소로 받는 홈타이, 가벼운 부분 관리(발마사지)로 나눠 견주면 고르기가 쉬워집니다. 환승역은 여러 노선이 만나 닿기 편하므로, 오가는 경로에 맞는 역을 고르는 것도 한 방법입니다.</p>
     ${callout()}
-    <h2>자주 묻는 질문</h2>
+    <h2>예약 전 자주 받는 질문</h2>
     <div class="faq">
       <details><summary>지하철역을 기준으로 어떻게 예약하나요?</summary><p>원하는 노선과 역을 고른 뒤 전화로 역 주변 위치와 프로그램, 시간을 전하면 방문 진행 여부와 도착까지 걸리는 시간을 안내받을 수 있습니다.</p></details>
       <details><summary>역 주변에서 홈타이도 되나요?</summary><p>홈타이는 집·숙소로 찾아오는 형태의 출장마사지로, 역 주변이 방문 가능 권역인지 예약하면서 확인하면 됩니다.</p></details>

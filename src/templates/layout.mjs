@@ -310,8 +310,8 @@ export function pricingTable() {
   <section class="pricing" aria-label="코스별 기본 요금">
     <div class="container">
       <div class="pricing-head">
-        <h2>코스별 기본 요금</h2>
-        <p>60·90·120분 코스별 기본 요금입니다. 숨겨진 추가 비용 없이 투명하게 안내합니다.</p>
+        <h2>이용 코스와 요금 살펴보기</h2>
+        <p>60·90·120분 코스별 기준 요금이며, 추가 비용 없이 있는 그대로 안내해 드립니다.</p>
       </div>
       <div class="pricing-grid">${cards}</div>
       <p class="pricing-note">지역·예약 시간대·이동 거리에 따라 상담 시 최종 확인됩니다. <a href="/guide/">상세 요금 안내 보기 →</a></p>
@@ -342,8 +342,8 @@ export function reviewsSection() {
   <section class="reviews" aria-label="고객 후기">
     <div class="container">
       <div class="reviews-head">
-        <span class="eyebrow">고객 후기</span>
-        <h2>실제 이용 고객의 후기</h2>
+        <span class="eyebrow">이용 후기</span>
+        <h2>직접 받아 보신 분들의 이용 후기</h2>
         <div class="rating-badge">
           <span class="g">G</span>
           <span class="score">4.8</span>
