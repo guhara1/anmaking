@@ -354,7 +354,7 @@ function linePage(line, sys) {
     path,
     file: `subway/line/${line.slug}/index.html`,
     html: layout({
-      title: `${line.name} 출장마사지·홈타이 역별 안내 | ${site.name}`,
+      title: `${line.name} 역별 출장마사지·홈타이 이용 정보 | ${site.name}`,
       description: `${line.name} 역별 출장마사지·홈타이의 방문 범위와 예약 점검 항목을 모았습니다.`.slice(0, 80),
       path,
       body,
@@ -377,7 +377,7 @@ function subwayIndex(systems, stationCount, lineCount) {
   const body = `
   <section class="hero"><div class="container">
     <p class="eyebrow">지하철역별 찾기</p>
-    <h1>전국 지하철역 출장마사지·홈타이 찾기</h1>
+    <h1>지하철역별 출장마사지·홈타이 안내</h1>
     <p>수도권·부산·대구·광주·대전 등 전국 지하철 노선과 역을 기준으로 출장마사지·홈타이 이용 안내를 살펴볼 수 있습니다. 노선을 고른 다음 가까운 역을 누르면 그 역세권 안내가 나옵니다. (총 ${lineCount}개 노선·${stationCount}개 역)</p>
     <div class="hero-actions">
       <a class="btn btn-gold" href="${site.phoneHref}">📞 전화예약 ${esc(phone)}</a>
@@ -404,7 +404,7 @@ function subwayIndex(systems, stationCount, lineCount) {
     path: "/subway/",
     file: "subway/index.html",
     html: layout({
-      title: `전국 지하철역 출장마사지·홈타이 찾기 | ${site.name}`,
+      title: `지하철역별 출장마사지·홈타이 안내 모음 | ${site.name}`,
       description: "전국 지하철 노선과 역별 출장마사지·홈타이 이용 안내를 살펴보세요.",
       path: "/subway/",
       body,

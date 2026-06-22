@@ -360,9 +360,9 @@ function programIndex() {
   </div></section>`;
 
   return layout({
-    title: `마사지 프로그램 안내 | ${site.name}`,
+    title: `마사지 종류별 프로그램 안내 모음 | ${site.name}`,
     description:
-      "스웨디시·타이마사지·아로마 등 관리 방식과 홈타이·24시간 이용 조건을 한눈에 비교하세요.",
+      "스웨디시·타이·아로마부터 홈타이·24시간까지, 관리 방식과 이용 조건을 한자리에서 비교해 드립니다.",
     path: "/program/",
     body,
     breadcrumb: [
@@ -590,8 +590,8 @@ function regionIndex() {
   ${pricingTable()}`;
 
   return layout({
-    title: `전국 지역별 출장마사지 찾기 | ${site.name}`,
-    description: "서울·경기·인천·부산·대구를 비롯한 전국 시·도별 출장마사지 안내를 확인하세요.",
+    title: `시·도별 출장마사지 안내 한눈에 보기 | ${site.name}`,
+    description: "서울·경기·부산·인천·대구 등 전국 시·도와 시·군·구별 출장마사지 안내를 한곳에 모았습니다.",
     path: "/region/",
     body,
     breadcrumb: [
@@ -692,7 +692,7 @@ function homePage() {
   </div></section>`;
 
   return layout({
-    title: `${site.name} | ${site.tagline}`,
+    title: `${site.name} — 전국 출장마사지·홈타이 지역·지하철역별 정보`,
     description:
       "스웨디시·타이·아로마 등 출장마사지와 홈타이 정보를 예약 전 확인 기준 위주로 정리해 드립니다.",
     path: "/",
@@ -747,8 +747,8 @@ function outcallPage() {
   return simplePage({
     path: "/outcall/",
     eyebrow: "출장마사지",
-    h1: "출장마사지 이용 안내와 예약 전 확인 기준",
-    desc: "출장마사지의 이용 방식과 예약 전 확인 기준, 프로그램·지역별 안내를 정리했습니다.",
+    h1: "출장마사지 이용 방식과 예약 전 짚을 점",
+    desc: "출장마사지가 어떻게 진행되는지와 예약 전 확인할 점, 프로그램·지역 안내를 정리했습니다.",
     sections: `
       <p>출장마사지는 관리사가 자택·숙소·사무실 등 원하는 장소로 직접 찾아와 관리를 진행하는 이용 방식입니다. 매장까지 오갈 필요가 없어 이동이 번거롭거나, 익숙하고 편안한 공간에서 받고 싶은 분들이 주로 택합니다. ‘홈타이’는 집에서 받는 타이식 방문 관리를 일컫는 말로, 넓게 보면 출장마사지의 한 갈래로 이해하면 됩니다.</p>
 
@@ -804,8 +804,8 @@ function guidePage() {
   return simplePage({
     path: "/guide/",
     eyebrow: "예약 가이드",
-    h1: "출장마사지 예약 가이드와 예약 전 체크리스트",
-    desc: "출장마사지 예약 순서와 예약 전 체크리스트, 비용·위생 확인 기준을 정리했습니다.",
+    h1: "출장마사지 예약 순서와 미리 챙길 체크리스트",
+    desc: "처음 예약할 때 순서대로 따라 하는 출장마사지 예약 흐름과 비용·위생 점검 항목입니다.",
     sections: `
       <p>처음 이용하는 분들을 위해 예약 순서와 확인 기준을 정리했습니다. 아래 순서를 따라가면 생각과 다른 상황을 줄일 수 있습니다.</p>
       <h2>예약 순서</h2>
@@ -872,8 +872,8 @@ function aboutPage() {
   return simplePage({
     path: "/about/",
     eyebrow: "이용 안내",
-    h1: "안마 KING 이용 안내와 편집·운영 정책",
-    desc: "안마 KING 소개와 편집·운영 정책, 정보 신뢰성에 대한 안내를 정리했습니다.",
+    h1: "안마 KING 소개와 콘텐츠 운영 원칙",
+    desc: "안마 KING가 어떤 기준으로 정보를 정리·검수하는지와 운영 원칙·신뢰성을 안내합니다.",
     sections: `
       <p>${esc(site.legalName)}은(는) 전국 출장마사지·홈타이 관련 정보를 한데 모아, 이용자가 예약에 앞서 확인해야 할 기준을 한곳에서 견주어 볼 수 있도록 돕는 정보 플랫폼입니다. 특정 업체를 일방적으로 띄우기보다, 지역·프로그램·이용 방식별로 ‘무엇을 짚어야 하는지’를 정리하는 데 무게를 둡니다.</p>
 
@@ -933,8 +933,8 @@ function contactPage() {
   return simplePage({
     path: "/contact/",
     eyebrow: "문의하기",
-    h1: "안마 KING 전화예약·문의 안내",
-    desc: "안마 KING 전화예약·문의 방법과 예약 시 안내할 내용, 이용 시간을 정리했습니다.",
+    h1: "안마 KING 전화예약과 문의 방법",
+    desc: "전화예약 시 미리 알려 주면 좋은 내용과 문의 방법, 상담 가능 시간을 안내합니다.",
     sections: `
       <p>예약과 문의는 전화로 가장 빠르게 안내받을 수 있습니다. 원하는 지역·프로그램·시간만 정해 두면 방문 가능 여부와 도착 예정 시간, 비용을 한 번에 확인하실 수 있습니다.</p>
       <div class="callout"><strong>전화예약 ${esc(site.phone)}</strong> · 원하는 지역과 프로그램, 시간을 말씀해 주시면 방문 가능 여부와 비용을 안내해 드립니다.</div>
@@ -981,8 +981,8 @@ function privacyPage() {
   return simplePage({
     path: "/privacy/",
     eyebrow: "개인정보처리방침",
-    h1: "개인정보처리방침",
-    desc: "안마 KING가 수집·이용하는 정보의 범위와 처리 방침, 이용자의 권리를 안내합니다.",
+    h1: "개인정보 처리방침 안내",
+    desc: "안마 KING가 어떤 정보를 어떻게 다루는지와 이용자 권리를 처리방침으로 안내합니다.",
     sections: `
       <p>${esc(site.legalName)}(이하 ‘${esc(site.name)}’)은(는) 이용자의 개인정보를 소중히 여기며 관련 법령을 지킵니다. 본 방침은 ${esc(site.name)}가 운영하는 정보 안내 웹사이트에 적용됩니다.</p>
       <h2>1. 수집하는 정보와 그 방법</h2>
@@ -1011,8 +1011,8 @@ function termsPage() {
   return simplePage({
     path: "/terms/",
     eyebrow: "이용약관",
-    h1: "이용약관",
-    desc: "안마 KING 웹사이트 이용 조건과 정보의 성격, 책임 범위를 안내합니다.",
+    h1: "서비스 이용약관",
+    desc: "안마 KING 웹사이트를 이용할 때 적용되는 조건과 정보의 성격, 책임 범위입니다.",
     sections: `
       <p>본 약관은 ${esc(site.legalName)}(이하 ‘${esc(site.name)}’)가 제공하는 정보 안내 웹사이트의 이용 조건을 정합니다. 웹사이트를 이용하면 본 약관에 동의한 것으로 봅니다.</p>
       <h2>1. 서비스의 성격</h2>

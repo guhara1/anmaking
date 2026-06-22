@@ -422,7 +422,7 @@ function seoulOverviewPage() {
   </nav>
   <section class="hero"><div class="container">
     <p class="eyebrow">서울특별시</p>
-    <h1>서울 출장마사지·홈타이 — 자치구·행정동별 찾기</h1>
+    <h1>서울 자치구·동별 출장마사지·홈타이 안내</h1>
     <p>${esc(seoul.intro)}</p>
     <div class="hero-actions">
       <a class="btn btn-gold" href="${site.phoneHref}">📞 전화예약 ${esc(phone)}</a>
@@ -458,7 +458,7 @@ function seoulOverviewPage() {
     path: "/region/seoul/",
     file: "region/seoul/index.html",
     html: layout({
-      title: `서울 출장마사지·홈타이 자치구·행정동별 찾기 | ${site.name}`,
+      title: `서울 자치구·동별 출장마사지 안내 | ${site.name}`,
       description: "서울 25개 자치구와 행정동을 좁혀 가며 출장마사지·홈타이 이용 안내를 살펴보세요.",
       path: "/region/seoul/",
       body,
