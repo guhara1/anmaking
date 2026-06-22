@@ -1,5 +1,6 @@
 import { site, primaryNav, programMenu } from "../../data/site.mjs";
 import { regionGroups, regionNameBySlug } from "../../data/regions.mjs";
+import { reviews, REVIEWS_DISPLAY, AGG_MIN, reviewStats } from "../../data/reviews.mjs";
 import { slugify } from "../../scripts/romanize.mjs";
 
 // HTML 이스케이프
@@ -294,6 +295,28 @@ export function layout(o) {
     },
   };
 
+  // 후기가 실제로 노출되는 페이지에서만 Review/AggregateRating 마크업(콘텐츠 일치)
+  const hasReviews = /class="reviews"/.test(o.body || "");
+  if (hasReviews && reviews.length) {
+    const { count, avg } = reviewStats();
+    if (count >= AGG_MIN) {
+      orgLd.aggregateRating = {
+        "@type": "AggregateRating",
+        ratingValue: avg.toFixed(1),
+        reviewCount: count,
+        bestRating: 5,
+        worstRating: 1,
+      };
+    }
+    orgLd.review = reviews.slice(0, REVIEWS_DISPLAY).map((r) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: r.name },
+      datePublished: r.date,
+      reviewRating: { "@type": "Rating", ratingValue: r.rating, bestRating: 5, worstRating: 1 },
+      reviewBody: r.text,
+    }));
+  }
+
   const websiteLd = {
     "@type": "WebSite",
     "@id": SITE_ID,
@@ -429,8 +452,8 @@ export const REVIEWS = [
   { name: "한○○", meta: "서울 마포 · 홈타이", rating: 4, text: "홈타이 처음인데 준비물 안내가 자세해서 편하게 받았습니다." },
 ];
 
-// 신뢰 기준 섹션 — 검증되지 않은 후기·평점은 게재하지 않는다(E-E-A-T).
-export function reviewsSection() {
+// 후기 섹션 — 실제(동의받은) 후기만 게재. 후기가 없으면 '안내 원칙'으로 대체.
+function trustSection() {
   const items = [
     ["예약 전 직접 확인", "가격·운영 정보는 변동될 수 있어, 방문 가능 여부와 총비용을 예약 시 직접 확인하도록 안내합니다."],
     ["확인 기준 중심 안내", "과장된 추천 대신 프로그램 구성·이용 시간·추가 비용 등 예약 전 점검 기준을 정리합니다."],
@@ -454,6 +477,42 @@ export function reviewsSection() {
       </div>
       <div class="grid grid-3">${cards}</div>
       <p class="reviews-note">검증 가능한 실제 후기만 게재하며, 확인되지 않은 후기·평점은 표시하지 않습니다.</p>
+    </div>
+  </section>`;
+}
+
+export function reviewsSection() {
+  if (!reviews.length) return trustSection();
+  const { count, avg, avgStr } = reviewStats();
+  const shown = reviews.slice(0, REVIEWS_DISPLAY);
+  const cards = shown
+    .map(
+      (r) => `
+      <div class="review-card">
+        <div class="stars" aria-label="별점 ${r.rating}점">${"★".repeat(r.rating)}<span class="off">${"★".repeat(5 - r.rating)}</span></div>
+        <p class="review-text">“${esc(r.text)}”</p>
+        <p class="review-meta"><strong>${esc(r.name)}</strong> · <time datetime="${esc(r.date)}">${esc(r.date)}</time></p>
+      </div>`
+    )
+    .join("");
+  const badge =
+    count >= AGG_MIN
+      ? `<div class="rating-badge">
+          <span class="score">${avgStr}</span>
+          <span class="stars">${"★".repeat(Math.round(avg))}</span>
+          <span class="count">/ 5.0 · 후기 ${count}건</span>
+        </div>`
+      : "";
+  return `
+  <section class="reviews" aria-label="이용 후기">
+    <div class="container">
+      <div class="reviews-head">
+        <span class="eyebrow">이용 후기</span>
+        <h2>직접 받아 보신 분들의 후기</h2>
+        ${badge}
+      </div>
+      <div class="grid grid-3">${cards}</div>
+      <p class="reviews-note">실제 이용 후 동의를 받아 게재한 후기입니다. 만족도와 경험은 개인·상황에 따라 다를 수 있습니다.</p>
     </div>
   </section>`;
 }
