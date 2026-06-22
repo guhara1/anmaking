@@ -97,7 +97,7 @@ function renderFooter() {
           <p>${esc(site.tagline)}</p>
           <address class="footer-nap">
             <a class="phone" href="${site.phoneHref}">${esc(site.phone)}</a>
-            <span class="nap-line">전화예약 · 연중무휴 상담 안내</span>
+            <span class="nap-line">전화예약 · ${esc(site.hours.text)}</span>
             <a class="nap-mail" href="mailto:${esc(site.email)}">${esc(site.email)}</a>
           </address>
           <div class="footer-cta">
@@ -233,9 +233,12 @@ export function layout(o) {
       url: abs("/assets/favicon.svg"),
       caption: site.name,
     },
+    slogan: site.tagline,
     knowsLanguage: "ko",
     knowsAbout: ["출장마사지", "홈타이", "스웨디시", "타이마사지", "아로마테라피", "발마사지"],
     priceRange: "₩90,000~₩180,000",
+    currenciesAccepted: "KRW",
+    paymentAccepted: site.payments.join(", "),
     areaServed: [
       "서울", "경기", "인천", "부산", "대구", "대전", "광주", "울산", "세종",
       "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주",
@@ -246,6 +249,48 @@ export function layout(o) {
       contactType: "reservations",
       areaServed: "KR",
       availableLanguage: ["ko"],
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: site.hours.days,
+      opens: site.hours.opens,
+      closes: site.hours.closes,
+    },
+    potentialAction: {
+      "@type": "ReserveAction",
+      name: "전화예약",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: site.phoneHref,
+        inLanguage: "ko",
+        actionPlatform: [
+          "http://schema.org/MobileWebPlatform",
+          "http://schema.org/DesktopWebPlatform",
+        ],
+      },
+      result: { "@type": "Reservation", name: "출장마사지·홈타이 예약" },
+    },
+    makesOffer: PRICING.map((c) => ({
+      "@type": "Offer",
+      name: c.name,
+      price: c.price.replace(/,/g, ""),
+      priceCurrency: "KRW",
+      description: c.desc,
+    })),
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "마사지 프로그램",
+      itemListElement: programMenu
+        .flatMap((g) => g.items)
+        .map((i) => ({
+          "@type": "Offer",
+          itemOffered: {
+            "@type": "Service",
+            name: i.label,
+            serviceType: i.label,
+            url: site.baseUrl + "/program/" + i.slug + "/",
+          },
+        })),
     },
   };
 

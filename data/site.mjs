@@ -22,6 +22,15 @@ export const site = {
   social: {},
   // 비즈니스 문의(웹사이트 제작·제휴) 텔레그램
   telegram: "https://t.me/googleseolab",
+  // 상담/영업 시간 — ⚠️ 실제 운영 시간으로 수정하세요 (구조화 데이터·푸터에 함께 사용)
+  hours: {
+    text: "연중무휴 · 24시간 전화 상담",
+    opens: "00:00",
+    closes: "23:59",
+    days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+  },
+  // 결제 수단 — 실제 가능한 수단으로 수정하세요
+  payments: ["현금", "계좌이체", "신용카드"],
 };
 
 // 상단 메뉴 (홈타이 단독 메뉴 없음)
